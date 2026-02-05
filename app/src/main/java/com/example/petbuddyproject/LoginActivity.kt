@@ -13,11 +13,11 @@ import androidx.core.view.WindowInsetsCompat
 import com.google.firebase.auth.FirebaseAuth
 
 class LoginActivity : AppCompatActivity() {
-    var mAuth: FirebaseAuth? = null
-    var userEmail: EditText? = null
-    var userPass: EditText? = null
-    var btnLogin: Button? = null
-    var signUp: TextView? = null
+    private var mAuth: FirebaseAuth? = null
+    private var userEmail: EditText? = null
+    private var userPass: EditText? = null
+    private var btnLogin: Button? = null
+    private var signUp: TextView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
