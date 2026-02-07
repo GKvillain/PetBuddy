@@ -1,12 +1,12 @@
-package com.example.petbuddyproject
+package com.example.petbuddyproject.Activity
 
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.example.petbuddyproject.R
 import com.google.firebase.firestore.CollectionReference
-import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 
 class MainActivity : AppCompatActivity() {
@@ -23,10 +23,10 @@ class MainActivity : AppCompatActivity() {
             insets
 
         }
-        val note = mutableMapOf<String, Any>()
-        note["name"] = "Lookkaew"
-        note["password"] = "5555555567"
-
-        docRef.add(note)
+//        val note = mutableMapOf<String, Any>()
+//        note["name"] = "Lookkaew"
+//        note["password"] = "5555555567"
+//
+//        docRef.add(note)
     }
 }
