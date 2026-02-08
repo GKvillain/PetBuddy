@@ -56,7 +56,7 @@ class Register : AppCompatActivity() {
 
             mAuth!!.createUserWithEmailAndPassword(email,password).addOnCompleteListener { task ->
                 if (!task.isSuccessful) {
-                    if (password.length < 18) {
+                    if (password.length < 6) {
                         regisPass?.error = "Please check your password."
                     } else {
                         Toast.makeText(this,"Authentication Failed: " + task.exception!!.message,
@@ -89,7 +89,6 @@ class Register : AppCompatActivity() {
     }
 
     private fun saveUserToFirestore(uid: String,email: String){
-        val user = User()
     }
 
 }

@@ -57,7 +57,7 @@ class LoginActivity : AppCompatActivity() {
 
             mAuth!!.signInWithEmailAndPassword(email,password).addOnCompleteListener { task ->
                 if (!task.isSuccessful) {
-                    if (password.length < 18) {
+                    if (password.length < 6) {
                         userPass?.error = "Please check your password."
                     } else {
                         Toast.makeText(this,"Authentication Failed: " + task.exception!!.message,
