@@ -1,60 +1,68 @@
 package com.example.petbuddyproject.Activity
 
 import android.app.DatePickerDialog
-import android.content.Intent
 import android.icu.util.Calendar
 import android.os.Bundle
+import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
+import android.widget.LinearLayout
 import android.widget.RadioButton
-import android.widget.RadioGroup
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.petbuddyproject.R
-import com.google.android.material.textfield.MaterialAutoCompleteTextView
-import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import java.sql.Time
 
-class CreateProfile : AppCompatActivity() {
-
-    var creUser: EditText? = null
-    var creFname : EditText? = null
-    var creLname: EditText? = null
-//    var countryDropdown: MaterialAutoCompleteTextView? = null
-    var checkFemale: RadioButton? = null
-    var checkMale: RadioButton? = null
-    var checkOther: RadioButton? = null
-    var creBtn: Button? = null
-    var radioGroup: RadioGroup? = null
+class CreatePetProfile : AppCompatActivity() {
     private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
     private val mAuth: FirebaseAuth = FirebaseAuth.getInstance()
+    var petUser: EditText? = null
+    var checkFemale : RadioButton? = null
+    var checkMale: RadioButton? = null
+    var petWeight: EditText? = null
+    var vacRabies: CheckBox? = null
+    var rabiesDate : EditText? = null
+    var rabiesTime : EditText? = null
+    var vacDa2pp: CheckBox? = null
+    var da2ppDate: EditText? = null
+    var da2ppTime: EditText? = null
+    var vacDhpp: CheckBox? = null
+    var dhppDate: EditText? = null
+    var dhppTime: EditText? = null
+    var btnCreate: Button? = null
+    var layoutRabies: LinearLayout? = null
+    var layoutDa2pp: LinearLayout? = null
+    var layoutDhpp: LinearLayout? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContentView(R.layout.activity_create_profile)
+        setContentView(R.layout.activity_create_pet_profile)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-
         init()
 
-        val countrys = resources.getStringArray(R.array.country)
-        val arrayAdapter = ArrayAdapter(this, R.layout.country_list_item,countrys)
-        val countryDropdown = findViewById<AutoCompleteTextView>(R.id.countryDropdown)
-        countryDropdown.setAdapter(arrayAdapter)
+        val pets = resources.getStringArray(R.array.pet)
+        val arrayAdapter = ArrayAdapter(this, R.layout.country_list_item,pets)
+        val petDropdown = findViewById<AutoCompleteTextView>(R.id.petDropdown)
+        petDropdown.setAdapter(arrayAdapter)
 
-        val etDate = findViewById<EditText>(R.id.etDate)
+        val breeds = resources.getStringArray(R.array.dog_breeds)
+        val arrayAdapterBreed = ArrayAdapter(this,R.layout.country_list_item,breeds)
+        val breedDropdown = findViewById<AutoCompleteTextView>(R.id.breedDropdown)
+        breedDropdown.setAdapter(arrayAdapterBreed)
+
+        val etDate = findViewById<EditText>(R.id.petDate)
         var selectedDate: Timestamp? = null
 
         etDate.setOnClickListener {
@@ -87,28 +95,19 @@ class CreateProfile : AppCompatActivity() {
                 month,
                 day
             )
-
-
-
             datePicker.show()
         }
-        creBtn!!.setOnClickListener {
-            val username = creUser!!.text.toString().trim()
-            val firstName = creFname!!.text.toString().trim()
-            val lastName = creLname!!.text.toString().trim()
-            val country = countryDropdown.text.toString().trim()
-            val sex = when (radioGroup!!.checkedRadioButtonId) {
-                R.id.radioFemale -> "Female"
-                R.id.radioMale -> "Male"
-                else -> "Other"
+
+        vacRabies?.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                layoutRabies!!.visibility = View.VISIBLE
+            } else {
+                layoutRabies!!.visibility = View.GONE
             }
-
-            saveUserToFirestore(username,firstName,lastName,country,selectedDate!!,sex)
-
-            startActivity(Intent(this, CreatePetProfile::class.java))
         }
 
     }
+
     private fun saveUserToFirestore(username:String,FName: String,LName: String,Country: String,Date: Timestamp,gender: String){
 
         val uid = mAuth.uid.toString()
@@ -131,14 +130,23 @@ class CreateProfile : AppCompatActivity() {
     }
 
     private fun init(){
-        creUser = findViewById(R.id.creUser)
-        creFname = findViewById(R.id.creFname)
-        creLname = findViewById(R.id.creLname)
-//        countryDropdown = findViewById(R.id.countryDropdown)
+        petUser = findViewById(R.id.crePUser)
         checkFemale = findViewById(R.id.radioFemale)
         checkMale = findViewById(R.id.radioMale)
-        checkOther = findViewById(R.id.radioOther)
-        creBtn = findViewById(R.id.creBtn)
-        radioGroup = findViewById(R.id.radioGroupSex)
+        petWeight = findViewById(R.id.crePWeightI)
+        vacRabies = findViewById(R.id.cbRabies)
+        rabiesDate = findViewById(R.id.etRabiesDate)
+        rabiesTime = findViewById(R.id.etRabiesTime)
+        vacDa2pp = findViewById(R.id.cbDA2PP)
+        da2ppDate = findViewById(R.id.etDA2PPDate)
+        da2ppTime = findViewById(R.id.etDA2PPTime)
+        vacDhpp = findViewById(R.id.cbDHPP)
+        dhppDate = findViewById(R.id.etDHPPDate)
+        dhppTime = findViewById(R.id.etDHPPTime)
+        btnCreate = findViewById(R.id.creBtn)
+        layoutRabies = findViewById(R.id.layoutRabies)
+        layoutDa2pp = findViewById(R.id.layoutDA2PP)
+        layoutDhpp = findViewById(R.id.layoutDHPP)
     }
+
 }

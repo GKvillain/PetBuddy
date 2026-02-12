@@ -14,6 +14,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.PetBuddyProject">
         <activity
+            android:name=".PetResult"
+            android:exported="false" />
+        <activity
+            android:name=".Activity.CreatePetProfile"
+            android:exported="false" />
+        <activity
             android:name=".Activity.CreateProfile"
             android:exported="false" />
         <activity

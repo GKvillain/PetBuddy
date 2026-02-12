@@ -2,6 +2,7 @@ package com.example.petbuddyproject.Activity
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
@@ -42,8 +43,8 @@ class Register : AppCompatActivity() {
 
 
         btnReg?.setOnClickListener {
-            val email = regisEmail?.text.toString().trim() {it <= ' '}
-            val password = regisEmail?.text.toString().trim() {it <= ' '}
+            val email = regisEmail?.text.toString().trim()
+            val password = regisPass?.text.toString().trim()
 
             if (email.isEmpty()){
                 Toast.makeText(this,"Please enter your email address.", Toast.LENGTH_LONG).show()
@@ -56,21 +57,14 @@ class Register : AppCompatActivity() {
 
             mAuth!!.createUserWithEmailAndPassword(email,password).addOnCompleteListener { task ->
                 if (!task.isSuccessful) {
-                    if (password.length < 18) {
+                    if (password.length < 6) {
                         regisPass?.error = "Please check your password."
                     } else {
                         Toast.makeText(this,"Authentication Failed: " + task.exception!!.message,
                             Toast.LENGTH_LONG).show()
                     }
                 } else {
-                    FirebaseAuth.getInstance().createUserWithEmailAndPassword(email,password).addOnSuccessListener {
-                        result ->
-                        val firebaseUser = result.user!!
-                        val uid = firebaseUser.uid
-                        val email = firebaseUser.email ?: " "
-
-                        saveUserToFirestore(uid,email)
-                    }
+                    saveUserToFirestore(task.result.user!!.uid,task.result.user!!.email ?: "")
                     Toast.makeText(this,"Create account successfully!", Toast.LENGTH_LONG).show()
                     startActivity(Intent(this, CreateProfile::class.java))
                     finish()
@@ -89,7 +83,14 @@ class Register : AppCompatActivity() {
     }
 
     private fun saveUserToFirestore(uid: String,email: String){
-        val user = User()
+
+        val userToFirebase = hashMapOf(
+            "uid" to uid,
+            "email" to email
+        )
+
+        db.collection("User").document(uid).set(userToFirebase)
+
     }
 
 }
