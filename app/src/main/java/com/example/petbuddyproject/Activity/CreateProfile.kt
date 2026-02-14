@@ -134,7 +134,6 @@ class CreateProfile : AppCompatActivity() {
         creUser = findViewById(R.id.creUser)
         creFname = findViewById(R.id.creFname)
         creLname = findViewById(R.id.creLname)
-//        countryDropdown = findViewById(R.id.countryDropdown)
         checkFemale = findViewById(R.id.radioFemale)
         checkMale = findViewById(R.id.radioMale)
         checkOther = findViewById(R.id.radioOther)

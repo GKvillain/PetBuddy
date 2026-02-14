@@ -77,7 +77,7 @@ class LoginActivity : AppCompatActivity() {
                             val user = document.toObject(User::class.java)
                             if (user?.userId!!.isEmpty()){
                                 startActivity(Intent(this, CreateProfile::class.java))
-                            }else if (!(user.createAccount)){
+                            }else if ((user.createAccount)){
                                 startActivity(Intent(this, CreatePetProfile::class.java))
                             }
                             else{

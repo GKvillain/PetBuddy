@@ -1,6 +1,7 @@
 package com.example.petbuddyproject.Activity
 
 import android.app.DatePickerDialog
+import android.app.TimePickerDialog
 import android.icu.util.Calendar
 import android.os.Bundle
 import android.view.View
@@ -11,6 +12,7 @@ import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.RadioButton
+import android.widget.RadioGroup
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -19,11 +21,14 @@ import com.example.petbuddyproject.R
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import java.sql.Time
+import java.util.Date
 
 class CreatePetProfile : AppCompatActivity() {
     private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
     private val mAuth: FirebaseAuth = FirebaseAuth.getInstance()
     var petUser: EditText? = null
+    var radioGroup: RadioGroup? = null
     var checkFemale : RadioButton? = null
     var checkMale: RadioButton? = null
     var petWeight: EditText? = null
@@ -66,37 +71,20 @@ class CreatePetProfile : AppCompatActivity() {
         var selectedDate: Timestamp? = null
 
         etDate.setOnClickListener {
-
-            val calendar = Calendar.getInstance()
-            val year = calendar.get(Calendar.YEAR)
-            val month = calendar.get(Calendar.MONTH)
-            val day = calendar.get(Calendar.DAY_OF_MONTH)
-
-            val datePicker = DatePickerDialog(
-                this,
-                { _, selectedYear, selectedMonth, selectedDay ->
-
-                    val selectedCalendar = Calendar.getInstance().apply {
-                        set(Calendar.YEAR, selectedYear)
-                        set(Calendar.MONTH, selectedMonth)
-                        set(Calendar.DAY_OF_MONTH,selectedDay)
-                        set(Calendar.HOUR_OF_DAY, 0)
-                        set(Calendar.MINUTE, 0)
-                        set(Calendar.SECOND, 0)
-                        set(Calendar.MILLISECOND, 0)
-                    }
-
-                    selectedDate = Timestamp(selectedCalendar.time)
-
-                    val date = "$selectedDay/${selectedMonth + 1}/$selectedYear"
-                    etDate.setText(date)
-                },
-                year,
-                month,
-                day
-            )
-            datePicker.show()
+            pickDate(etDate) {
+                timestamp -> selectedDate = timestamp
+            }
         }
+
+        var dateOfRabies: Timestamp? = null;
+        var timeOfRabies: Timestamp? = null;
+        var dateOfDhpp: Timestamp? = null
+        var timeOfDhpp: Timestamp? = null
+        var dateOfDa2pp: Timestamp? = null
+        var timeOfDa2pp: Timestamp? = null
+
+
+
 
         vacRabies?.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
@@ -106,19 +94,93 @@ class CreatePetProfile : AppCompatActivity() {
             }
         }
 
+        rabiesDate?.setOnClickListener {
+            pickDate(rabiesDate!!) {
+                timestamp -> dateOfRabies = timestamp
+            }
+        }
+
+        rabiesTime?.setOnClickListener {
+            pickTime(rabiesTime!!) { hour, minute ->
+
+                val calendar = Calendar.getInstance().apply {
+                    time = timeOfRabies?.toDate() ?: Date()
+                    set(Calendar.HOUR_OF_DAY, hour)
+                    set(Calendar.MINUTE, minute)
+                }
+
+                timeOfRabies = Timestamp(calendar.time)
+            }
+        }
+
+        vacDhpp?.setOnCheckedChangeListener { _,isChecked ->
+            if (isChecked) {
+                layoutDhpp!!.visibility = View.VISIBLE
+            }else{
+                layoutDhpp!!.visibility = View.GONE
+            }
+        }
+
+        dhppDate?.setOnClickListener {
+            pickDate(dhppDate!!){
+                timestamp -> dateOfDhpp = timestamp
+            }
+        }
+
+        dhppTime?.setOnClickListener {
+            pickTime(dhppTime!!) { hour,minute ->
+                val calendar = Calendar.getInstance().apply {
+                    time = timeOfDhpp?.toDate() ?: Date()
+                    set(Calendar.HOUR_OF_DAY, hour)
+                    set(Calendar.MINUTE, minute)
+                }
+                timeOfDhpp = Timestamp(calendar.time)
+            }
+        }
+
+        vacDa2pp?.setOnCheckedChangeListener { _,  isChecked ->
+            if (isChecked){
+                layoutDa2pp!!.visibility = View.VISIBLE
+            } else {
+                layoutDa2pp!!.visibility = View.GONE
+            }
+        }
+
+        da2ppDate?.setOnClickListener {
+            pickDate(da2ppDate!!){
+                timestamp -> dateOfDa2pp = timestamp
+            }
+        }
+
+        da2ppTime?.setOnClickListener {
+            pickTime(da2ppTime!!) {hour, minute ->
+                val calendar = Calendar.getInstance().apply {
+                    time = timeOfDa2pp?.toDate() ?: Date()
+                    set(Calendar.HOUR_OF_DAY, hour)
+                    set(Calendar.MINUTE, minute)
+                }
+                timeOfDa2pp = Timestamp(calendar.time)
+            }
+        }
+
+        btnCreate?.setOnClickListener {
+            val usernamePet = petUser!!.text.toString().trim()
+            val weightPet = petWeight!!.text.toString().trim()
+            val sex = when (radioGroup!!.checkedRadioButtonId) {
+                R.id.radioFemale -> "Female"
+                R.id.radioMale -> "Male"
+                else -> "Other"
+            }
+
+        }
+
     }
 
-    private fun saveUserToFirestore(username:String,FName: String,LName: String,Country: String,Date: Timestamp,gender: String){
+    private fun saveUserToFirestore(usernamePet: String, ){
 
         val uid = mAuth.uid.toString()
         val userToFirebase = mapOf(
-            "username" to username,
-            "firstName" to FName,
-            "lastName" to LName,
-            "country" to Country,
-            "birthDate" to Date,
-            "gender" to gender,
-            "createAccount" to true
+
         )
 //        val userToFirebase = hashMapOf(
 //            "uid" to uid,
@@ -147,6 +209,63 @@ class CreatePetProfile : AppCompatActivity() {
         layoutRabies = findViewById(R.id.layoutRabies)
         layoutDa2pp = findViewById(R.id.layoutDA2PP)
         layoutDhpp = findViewById(R.id.layoutDHPP)
+        radioGroup = findViewById(R.id.radioGroupSex)
     }
+
+    private fun pickDate(
+        etDate: EditText,
+        onDateSelected: (Timestamp) -> Unit
+    ) {
+
+        val calendar = Calendar.getInstance()
+
+        val datePicker = DatePickerDialog(
+            this,
+            { _, year, month, day ->
+
+                val selectedCalendar = Calendar.getInstance().apply {
+                    set(year, month, day, 0, 0, 0)
+                    set(Calendar.MILLISECOND, 0)
+                }
+
+                val timestamp = Timestamp(selectedCalendar.time)
+
+                etDate.setText("$day/${month + 1}/$year")
+
+                onDateSelected(timestamp)
+            },
+            calendar.get(Calendar.YEAR),
+            calendar.get(Calendar.MONTH),
+            calendar.get(Calendar.DAY_OF_MONTH)
+        )
+
+        datePicker.show()
+    }
+
+
+    private fun pickTime(
+        etTime: EditText,
+        onTimeSelected: (Int, Int) -> Unit
+    ) {
+
+        val calendar = Calendar.getInstance()
+
+        val timePickerDialog = TimePickerDialog(
+            this,
+            { _, hour, minute ->
+
+                val formattedTime = String.format("%02d:%02d", hour, minute)
+                etTime.setText(formattedTime)
+
+                onTimeSelected(hour, minute)
+            },
+            calendar.get(Calendar.HOUR_OF_DAY),
+            calendar.get(Calendar.MINUTE),
+            true
+        )
+
+        timePickerDialog.show()
+    }
+
 
 }
