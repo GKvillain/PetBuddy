@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.petbuddyproject.Data.User
+import com.example.petbuddyproject.PetResult
 import com.example.petbuddyproject.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -75,14 +76,27 @@ class LoginActivity : AppCompatActivity() {
                             document ->
                         if (document.exists()){
                             val user = document.toObject(User::class.java)
-                            if (user?.userId!!.isEmpty()){
+                            if (user == null){
+                                return@addOnSuccessListener
+                            }
+//                            if (user.petIds[0].isEmpty()){
+//                                startActivity(Intent(this, PetResult::class.java))
+//                            }
+//                            else
+
+                            if (!(user.createAccount)){
                                 startActivity(Intent(this, CreateProfile::class.java))
-                            }else if ((user.createAccount)){
+                            }
+                            else  if (user.userId.isEmpty()){
+//                                startActivity(Intent(this, CreateProfile::class.java))
+                                Toast.makeText(this,"This email has not been sign up",Toast.LENGTH_LONG).show()
+                            }
+                            else if (user.petIds.isEmpty()){
                                 startActivity(Intent(this, CreatePetProfile::class.java))
                             }
                             else{
                                 Toast.makeText(this,"Sign in successfully!", Toast.LENGTH_LONG).show()
-                                startActivity(Intent(this@LoginActivity, MainActivity::class.java))
+                                startActivity(Intent(this, MainActivity::class.java))
                                 finish()
                             }
                     }

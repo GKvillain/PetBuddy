@@ -5,4 +5,5 @@
     <color name="background">#FFFDF6</color>
     <color name="main_color">#A8817A</color>
     <color name="home_botton">#E3D0C1</color>
+    <color name="accent_color">#F1EBE4</color>
 </resources>

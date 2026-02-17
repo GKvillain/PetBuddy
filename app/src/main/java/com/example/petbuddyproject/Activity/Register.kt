@@ -85,7 +85,7 @@ class Register : AppCompatActivity() {
     private fun saveUserToFirestore(uid: String,email: String){
 
         val userToFirebase = hashMapOf(
-            "uid" to uid,
+            "userId" to uid,
             "email" to email
         )
 

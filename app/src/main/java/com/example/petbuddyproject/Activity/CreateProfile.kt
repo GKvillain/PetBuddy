@@ -2,16 +2,21 @@ package com.example.petbuddyproject.Activity
 
 import android.app.DatePickerDialog
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.icu.util.Calendar
+import android.net.Uri
 import android.os.Bundle
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.RadioButton
 import android.widget.RadioGroup
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -21,6 +26,8 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import java.io.File
+import java.io.FileOutputStream
 import java.sql.Time
 
 class CreateProfile : AppCompatActivity() {
@@ -36,6 +43,13 @@ class CreateProfile : AppCompatActivity() {
     var radioGroup: RadioGroup? = null
     private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
     private val mAuth: FirebaseAuth = FirebaseAuth.getInstance()
+    private var changeProfile: ImageView? = null
+    private val pickImage =
+        registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+            uri?.let {
+                saveProfileImage(it)
+            }
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -108,6 +122,14 @@ class CreateProfile : AppCompatActivity() {
             startActivity(Intent(this, CreatePetProfile::class.java))
         }
 
+
+        changeProfile?.setOnClickListener {
+            pickImage.launch("image/*")
+        }
+
+
+
+
     }
     private fun saveUserToFirestore(username:String,FName: String,LName: String,Country: String,Date: Timestamp,gender: String){
 
@@ -121,14 +143,52 @@ class CreateProfile : AppCompatActivity() {
             "gender" to gender,
             "createAccount" to true
         )
-//        val userToFirebase = hashMapOf(
-//            "uid" to uid,
-//            "email" to email
-//        )
-
-//        db.collection("User").document(uid).set(userToFirebase)
         db.collection("User").document(uid).update(userToFirebase)
     }
+
+    fun saveProfileImage(uri: Uri) {
+        try {
+            val inputStream = contentResolver.openInputStream(uri)
+
+            val fileName = "profile_image.jpg"
+            val file = File(filesDir, fileName)
+
+            val outputStream = FileOutputStream(file)
+
+            inputStream?.copyTo(outputStream)
+
+            inputStream?.close()
+            outputStream.close()
+
+            saveImagePath(file.absolutePath)
+
+            loadProfileImage()
+
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    fun saveImagePath(path: String) {
+        val prefs = getSharedPreferences("app_prefs", MODE_PRIVATE)
+        prefs.edit().putString("profile_path", path).apply()
+    }
+
+
+    fun loadProfileImage() {
+        val prefs = getSharedPreferences("app_prefs", MODE_PRIVATE)
+        val path = prefs.getString("profile_path", null)
+
+        if (path != null) {
+            val bitmap = BitmapFactory.decodeFile(path)
+            changeProfile?.setImageBitmap(bitmap)
+        }
+    }
+
+
+
+
 
     private fun init(){
         creUser = findViewById(R.id.creUser)
@@ -139,5 +199,6 @@ class CreateProfile : AppCompatActivity() {
         checkOther = findViewById(R.id.radioOther)
         creBtn = findViewById(R.id.creBtn)
         radioGroup = findViewById(R.id.radioGroupSex)
+        changeProfile = findViewById(R.id.imageProfile)
     }
 }
