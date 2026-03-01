@@ -11,6 +11,7 @@ data class Pet(
     val petTypeId: String = "",
     val birthDate: Timestamp? = null,
     val pathURL: String = "",
+    var isSelected: Boolean = false,
 
     val weightIds: List<String> = emptyList(),
     val expenseIds: List<String> = emptyList(),

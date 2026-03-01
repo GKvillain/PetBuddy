@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.petbuddyproject.Data.Pet
 import com.example.petbuddyproject.R
 
@@ -24,8 +25,12 @@ class PetResultAdapter(private val items: List<Pet>) :
 
         holder.nameTextView.text = pet.petName
         holder.breedTextVew.text = pet.breed
-        val bitmap = BitmapFactory.decodeFile(pet.pathURL)
-        holder.imageIdView.setImageBitmap(bitmap)
+//        val bitmap = BitmapFactory.decodeFile(pet.pathURL)
+
+        Glide.with(holder.imageIdView.context)
+            .load(pet.pathURL)
+            .into(holder.imageIdView)
+//        holder.imageIdView.setImageBitmap(bitmap)
     }
 
     override fun getItemCount(): Int {

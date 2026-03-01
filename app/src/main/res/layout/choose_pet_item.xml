@@ -21,8 +21,14 @@
             android:orientation="horizontal"
             android:padding="8dp">
 
+            <CheckBox
+                android:id="@+id/chPet"
+                android:gravity="center_vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent" />
+
             <ImageView
-                android:id="@+id/imagePet"
+                android:id="@+id/chimagePet"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
                 android:layout_weight="0"
@@ -38,7 +44,7 @@
                 android:paddingStart="12dp">
 
                 <TextView
-                    android:id="@+id/namePet"
+                    android:id="@+id/chnamePet"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Pet Name"
@@ -46,7 +52,7 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/breedPet"
+                    android:id="@+id/chbreedPet"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"

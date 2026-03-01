@@ -25,6 +25,7 @@ import androidx.core.view.WindowInsetsCompat
 import com.example.petbuddyproject.Data.Pet
 import com.example.petbuddyproject.PetResult
 import com.example.petbuddyproject.R
+import com.example.petbuddyproject.databinding.ActivityMainBinding
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
@@ -59,6 +60,8 @@ class CreatePetProfile : AppCompatActivity() {
     var profilePet: ImageView? = null
     private var currentPetId:String? = null
     private var pathImage: String? = null
+    var breedDropdown: AutoCompleteTextView? = null
+    private lateinit var binding: ActivityMainBinding
     private val pickImage =
         registerForActivityResult(ActivityResultContracts.GetContent()) { result ->
             result?.let {
@@ -85,10 +88,22 @@ class CreatePetProfile : AppCompatActivity() {
         val petDropdown = findViewById<AutoCompleteTextView>(R.id.petDropdown)
         petDropdown.setAdapter(arrayAdapter)
 
-        val breeds = resources.getStringArray(R.array.dog_breeds)
-        val arrayAdapterBreed = ArrayAdapter(this,R.layout.country_list_item,breeds)
-        val breedDropdown = findViewById<AutoCompleteTextView>(R.id.breedDropdown)
-        breedDropdown.setAdapter(arrayAdapterBreed)
+        var breeds: Array<String>? =  null
+        var arrayAdapterBreed: ArrayAdapter<String>?= null
+
+        if (petDropdown.text.toString() == "Dog") {
+            breeds = resources.getStringArray(R.array.dog_breeds)
+            arrayAdapterBreed = ArrayAdapter(this,R.layout.country_list_item,breeds)
+            breedDropdown = findViewById<AutoCompleteTextView>(R.id.breedDropdown)
+        }else{
+            breeds = resources.getStringArray(R.array.cat_breeds)
+            arrayAdapterBreed = ArrayAdapter(this,R.layout.country_list_item,breeds)
+            breedDropdown = findViewById<AutoCompleteTextView>(R.id.breedDropdown)
+        }
+
+
+
+        breedDropdown?.setAdapter(arrayAdapterBreed)
 
         val etDate = findViewById<EditText>(R.id.petDate)
         var selectedDate: Timestamp? = null
@@ -189,7 +204,7 @@ class CreatePetProfile : AppCompatActivity() {
         btnCreate?.setOnClickListener {
             val usernamePet = petUser!!.text.toString().trim()
             val weightPet = petWeight!!.text.toString().trim()
-            val breed = breedDropdown.text.toString().trim()
+            val breed = breedDropdown!!.text.toString().trim()
             val pet = petDropdown.text.toString().trim()
             val sex = when (radioGroup!!.checkedRadioButtonId) {
                 R.id.radioFemale -> "Female"
@@ -254,6 +269,7 @@ class CreatePetProfile : AppCompatActivity() {
         layoutDhpp = findViewById(R.id.layoutDHPP)
         radioGroup = findViewById(R.id.radioGroupSex)
         profilePet = findViewById(R.id.imageProfilePet)
+        breedDropdown = findViewById(R.id.breedDropdown)
     }
 
     private fun pickDate(

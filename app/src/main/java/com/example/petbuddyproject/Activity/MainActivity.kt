@@ -7,8 +7,10 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.example.petbuddyproject.ChoosePet
 import com.example.petbuddyproject.ExpenseActivity
 import com.example.petbuddyproject.FeedingActivity
+import com.example.petbuddyproject.PetResult
 import com.example.petbuddyproject.R
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
@@ -17,6 +19,8 @@ import kotlin.math.exp
 class MainActivity : AppCompatActivity() {
     var feedBtn: Button? = null
     var expenseBtn: Button? = null
+    var petResultBtn: Button? = null
+    var chooseProfileBtn: Button? = null
     private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
     private val docRef: CollectionReference = db.collection("Notebook")
 
@@ -39,16 +43,28 @@ class MainActivity : AppCompatActivity() {
         init()
 
         feedBtn?.setOnClickListener {
-            startActivity(Intent(this, FeedingActivity::class.java))
+            val intent = Intent(this, ChoosePet::class.java)
+            intent.putExtra(ChoosePet.MODE_KEY, ChoosePet.MODE_FEEDING)
+            startActivity(intent)
         }
 
         expenseBtn?.setOnClickListener {
-            startActivity(Intent(this, ExpenseActivity::class.java))
+            val intent = Intent(this, ChoosePet::class.java)
+            intent.putExtra(ChoosePet.MODE_KEY, ChoosePet.MODE_EXPENSE)
+            startActivity(intent)
+        }
+        petResultBtn?.setOnClickListener {
+            startActivity(Intent(this, PetResult::class.java))
+        }
+        chooseProfileBtn?.setOnClickListener {
+            startActivity(Intent(this, ChoosePet::class.java))
         }
     }
 
     private fun init(){
         feedBtn = findViewById(R.id.feedBtn)
         expenseBtn = findViewById(R.id.expenseBtn)
+        petResultBtn = findViewById(R.id.petResultBtn)
+        chooseProfileBtn = findViewById(R.id.chooseProfileBtn)
     }
 }

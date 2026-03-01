@@ -17,4 +17,9 @@
         <item>Poodle</item>
         <item>Bulldog</item>
     </string-array>
+    <string-array name="cat_breeds">
+        <item>Siamese cat</item>
+        <item>Ragdoll</item>
+        <item>Birman</item>
+    </string-array>
 </resources>

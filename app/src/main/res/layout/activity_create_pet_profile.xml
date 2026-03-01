@@ -61,6 +61,7 @@
                     android:background="@drawable/background_input_field"/>
             </com.google.android.material.textfield.TextInputLayout>
 
+
             <!-- Breed Dropdown -->
             <com.google.android.material.textfield.TextInputLayout
                 style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
@@ -75,6 +76,7 @@
                     android:text="Breed"
                     android:background="@drawable/background_input_field"/>
             </com.google.android.material.textfield.TextInputLayout>
+
 
             <!-- Gender -->
             <RadioGroup

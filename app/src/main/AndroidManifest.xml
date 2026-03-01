@@ -15,6 +15,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.PetBuddyProject">
         <activity
+            android:name=".AddExpense"
+            android:exported="false" />
+        <activity
+            android:name=".ChoosePet"
+            android:exported="false" />
+        <activity
             android:name=".ExpenseActivity"
             android:exported="false" />
         <activity
