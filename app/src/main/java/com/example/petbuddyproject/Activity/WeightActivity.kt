@@ -13,11 +13,11 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.petbuddyproject.R
 import com.example.petbuddyproject.SortType
-import com.example.petbuddyproject.adapter.WeightAdapter
+import com.example.petbuddyproject.Adapter.WeightAdapter
 import com.example.petbuddyproject.databinding.ActivityWeightBinding
-import com.example.petbuddyproject.dataclass.WeightRecord
-import com.example.petbuddyproject.listener.WeightActionListener
-import com.example.petbuddyprojectodel.WeightUiItem
+import com.example.petbuddyproject.Data.WeightRecord
+import com.example.petbuddyproject.WeightActionListener
+import com.example.petbuddyproject.WeightUiItem
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentChange
